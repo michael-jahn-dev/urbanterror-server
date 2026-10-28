@@ -56,6 +56,8 @@ The first build compiles the engine and takes a few minutes on a Raspberry Pi. T
 image: ghcr.io/michael-jahn-dev/urbanterror-server:latest
 ```
 
+The prebuilt image is rebuilt on every push and once a month, so it picks up Debian security updates. Update with `docker compose pull && docker compose up -d`.
+
 ### 4. Open the port
 
 Forward **UDP 27960** on your router to the host if players should join from the internet.
