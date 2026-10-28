@@ -46,17 +46,23 @@ sudo chown -R 1000:1000 UrbanTerror43
 ### 3. Start
 
 ```bash
-docker compose up -d --build
+docker compose up -d
 docker compose logs -f
 ```
 
-The first build compiles the engine and takes a few minutes on a Raspberry Pi. To skip building, use the prebuilt image in `docker-compose.yml`:
+This uses the prebuilt image `ghcr.io/michael-jahn-dev/urbanterror-server:latest`. It is rebuilt on every push and once a month, so it stays on the current `debian:bookworm-slim` base image. Update with:
 
-```yaml
-image: ghcr.io/michael-jahn-dev/urbanterror-server:latest
+```bash
+docker compose pull && docker compose up -d
 ```
 
-The prebuilt image is rebuilt on every push and once a month, so it picks up Debian security updates. Update with `docker compose pull && docker compose up -d`.
+To build the engine yourself instead, swap `image:` for `build: .` in `docker-compose.yml` and run `docker compose up -d --build`. The first build takes a few minutes on a Raspberry Pi. To update a local build:
+
+```bash
+docker compose build --pull --no-cache && docker compose up -d
+```
+
+`--no-cache` makes Docker fetch the engine source again instead of reusing the cached layer.
 
 ### 4. Open the port
 
@@ -91,7 +97,7 @@ for f in UrbanTerror43/q3ut4/*.pk3; do unzip -l "$f" | grep -o 'maps/[^ ]*\.bsp'
 
 - On ARM the game logic runs in the QVM interpreter instead of the x86 JIT. That costs a bit of CPU, but a Raspberry Pi 5 handles a full server easily.
 - The engine is based on Quake 3 and isn't actively maintained anymore. The compose file drops all capabilities, blocks privilege escalation and limits memory. Use a strong RCON password.
-- Building the engine at a specific commit or tag: `docker compose build --build-arg ENGINE_REF=<tag>`
+- Building the engine at a specific branch or tag (not a commit hash): `docker compose build --build-arg ENGINE_REF=<tag>`
 
 ## License
 

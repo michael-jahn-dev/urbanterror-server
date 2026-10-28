@@ -1,8 +1,8 @@
 services:
   urt:
-    build: .
-    # or use a prebuilt image:
-    # image: ghcr.io/michael-jahn-dev/urbanterror-server:latest
+    image: ghcr.io/michael-jahn-dev/urbanterror-server:latest
+    # or build the engine yourself:
+    # build: .
     restart: unless-stopped
     read_only: true
     cap_drop:
